@@ -1,0 +1,12 @@
+<mvc:View
+    controllerName="controller.Login"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <VBox class="sapUiSmallMargin" width="300px">
+        <Input placeholder="Username" value="{/username}" />
+        <Input type="Password" placeholder="Password" value="{/password}" />
+        <Button text="Login" press="login" />
+    </VBox>
+
+</mvc:View>
