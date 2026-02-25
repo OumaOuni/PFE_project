@@ -1,0 +1,12 @@
+<mvc:View
+    controllerName="myApp.controller.CEODashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page title="CEO Dashboard">
+        <content>
+            <Text text="CEO Dashboard Page"/>
+        </content>
+    </Page>
+
+</mvc:View>

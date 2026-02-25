@@ -1,0 +1,12 @@
+<mvc:View
+    controllerName="myApp.controller.InventoryDashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page title="Inventory Manager Dashboard">
+        <content>
+            <Text text="Inventory Manager Dashboard Page"/>
+        </content>
+    </Page>
+
+</mvc:View>
