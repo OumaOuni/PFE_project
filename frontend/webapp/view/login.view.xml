@@ -2,39 +2,36 @@
     controllerName="myApp.controller.Login"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    
-    <Page title="Login - Luxury Home Decor BI">
-        <content>
-            <VBox class="sapUiSmallMargin" justifyContent="Center" alignItems="Center">
-                
-                <Input
-                    id="usernameInput"
-                    placeholder="Username"
-                    value="{/username}"
-                    width="300px"/>
-                    
-                <Input
-                    id="passwordInput"
-                    placeholder="Password"
-                    value="{/password}"
-                    type="Password"
-                    width="300px"
-                    class="sapUiSmallMarginTop"/>
-                    
-                <Button
-                    text="Login"
-                    type="Emphasized"
-                    width="150px"
-                    class="sapUiSmallMarginTop"
-                    press="login"/>
-                    
-                <Text
-                    id="errorText"
-                    text=""
-                    class="sapUiSmallMarginTop"
-                    color="Critical"/>
-                    
-            </VBox>
-        </content>
-    </Page>
+
+    <App>
+        <Page title="Login - Luxury Home Decor BI">
+            <content>
+                <VBox class="sapUiSmallMargin"
+                       justifyContent="Center"
+                       alignItems="Center"
+                       height="100%">
+
+                    <Input
+                        placeholder="Username"
+                        value="{/username}"
+                        width="300px"/>
+
+                    <Input
+                        placeholder="Password"
+                        value="{/password}"
+                        type="Password"
+                        width="300px"
+                        class="sapUiSmallMarginTop"/>
+
+                    <Button
+                        text="Login"
+                        type="Emphasized"
+                        width="150px"
+                        class="sapUiSmallMarginTop"
+                        press="login"/>
+
+                </VBox>
+            </content>
+        </Page>
+    </App>
 </mvc:View>

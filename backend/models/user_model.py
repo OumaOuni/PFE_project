@@ -1,12 +1,11 @@
-from backend.database import get_connection
+from sqlalchemy import Column, Integer, String
+from backend.database import Base
 
-def get_user_by_username(username):
-    
-    # Query PostgreSQL
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
-    user = cursor.fetchone()
-    cursor.close()
-    conn.close()
-    return user
+class User(Base):
+    __tablename__ = "users"
+    __table_args__ = {"schema": "openrational"}
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    password = Column(String, nullable=False)
+    role = Column(String)

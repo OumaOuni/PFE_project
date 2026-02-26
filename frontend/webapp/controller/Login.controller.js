@@ -4,7 +4,8 @@ sap.ui.define(
     "use strict";
 
     return Controller.extend("myApp.controller.Login", {
-      // 🔥 PUT IT HERE
+      // when your Login page loads, onInit() executes immediately.
+
       onInit: function () {
         var oModel = new sap.ui.model.json.JSONModel({
           username: "",

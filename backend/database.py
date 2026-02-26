@@ -1,11 +1,14 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-import psycopg2
+DATABASE_URL = "postgresql://postgres:Oouunnii123$@localhost:5432/luxury_home_decor_bi"
 
-def get_connection():
-    return psycopg2.connect(
-    host="localhost",
-    dbname="luxury_home_decor_bi",
-    user="postgres",
-    password="Oouunnii123$"
+engine = create_engine(DATABASE_URL)
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
 )
-    
+
+Base = declarative_base()
