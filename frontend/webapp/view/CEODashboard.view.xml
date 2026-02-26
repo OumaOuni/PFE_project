@@ -1,12 +1,149 @@
 <mvc:View
-    controllerName="myApp.controller.CEODashboard"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+ controllerName="app.controller.ExecutiveDashboard"
+ xmlns:mvc="sap.ui.core.mvc"
+ xmlns="sap.m"
+ xmlns:viz="sap.viz.ui5.controls"
+ xmlns:viz.data="sap.viz.ui5.data"
+ xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+ displayBlock="true">
 
-    <Page title="CEO Dashboard">
-        <content>
-            <Text text="CEO Dashboard Page"/>
-        </content>
-    </Page>
+<Page title="Executive Analytics Dashboard">
 
+<VBox>
+
+<!-- ================= KPIs ================= -->
+
+<HBox justifyContent="SpaceAround" class="sapUiMediumMargin">
+
+<GenericTile header="Total Revenue" frameType="OneByOne">
+<TileContent>
+<NumericContent value="{/kpi/revenue}" scale="K" indicator="Up"/>
+</TileContent>
+</GenericTile>
+
+<GenericTile header="Active Users">
+<TileContent>
+<NumericContent value="{/kpi/users}" indicator="Up"/>
+</TileContent>
+</GenericTile>
+
+<GenericTile header="Conversion Rate">
+<TileContent>
+<NumericContent value="{/kpi/conversion}" unit="%" indicator="Up"/>
+</TileContent>
+</GenericTile>
+
+<GenericTile header="Growth">
+<TileContent>
+<NumericContent value="{/kpi/growth}" unit="%" indicator="Up"/>
+</TileContent>
+</GenericTile>
+
+</HBox>
+
+<!-- ================= ANALYTIC TILES ================= -->
+
+<Label text="Performance Overview" class="sapUiSmallMarginBegin sapUiTinyMarginBottom"/>
+
+<TileContainer class="sapUiMediumMargin">
+
+<StandardTile
+ title="Sales Analysis"
+ info="Revenue trends"
+ icon="sap-icon://bar-chart"
+ press="onOpenSales"/>
+
+<StandardTile
+ title="User Insights"
+ info="Engagement metrics"
+ icon="sap-icon://line-chart"
+ press="onOpenUsers"/>
+
+<StandardTile
+ title="Market Share"
+ info="Distribution"
+ icon="sap-icon://pie-chart"
+ press="onOpenMarket"/>
+
+<StandardTile
+ title="Forecast"
+ info="Predictive analytics"
+ icon="sap-icon://business-objects-experience"
+ press="onOpenForecast"/>
+
+</TileContainer>
+
+<!-- ================= CHART AREA ================= -->
+
+<Grid defaultSpan="L6 M6 S12" class="sapUiMediumMargin">
+
+<!-- COLUMN CHART -->
+<viz:VizFrame vizType="column" width="100%" height="400px">
+
+<viz:dataset>
+<viz.data:FlattenedDataset data="{/sales}">
+<viz.data:dimensions>
+<viz.data:DimensionDefinition name="Month" value="{month}"/>
+</viz.data:dimensions>
+<viz.data:measures>
+<viz.data:MeasureDefinition name="Revenue" value="{revenue}"/>
+</viz.data:measures>
+</viz.data:FlattenedDataset>
+</viz:dataset>
+
+<viz:feeds>
+<viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Revenue"/>
+<viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Month"/>
+</viz:feeds>
+
+</viz:VizFrame>
+
+
+<!-- LINE CHART -->
+<viz:VizFrame vizType="line" width="100%" height="400px">
+
+<viz:dataset>
+<viz.data:FlattenedDataset data="{/trend}">
+<viz.data:dimensions>
+<viz.data:DimensionDefinition name="Date" value="{date}"/>
+</viz.data:dimensions>
+<viz.data:measures>
+<viz.data:MeasureDefinition name="Users" value="{users}"/>
+</viz.data:measures>
+</viz.data:FlattenedDataset>
+</viz:dataset>
+
+<viz:feeds>
+<viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Users"/>
+<viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Date"/>
+</viz:feeds>
+
+</viz:VizFrame>
+
+
+<!-- PIE CHART -->
+<viz:VizFrame vizType="pie" width="100%" height="400px">
+
+<viz:dataset>
+<viz.data:FlattenedDataset data="{/distribution}">
+<viz.data:dimensions>
+<viz.data:DimensionDefinition name="Segment" value="{segment}"/>
+</viz.data:dimensions>
+<viz.data:measures>
+<viz.data:MeasureDefinition name="Value" value="{value}"/>
+</viz.data:measures>
+</viz.data:FlattenedDataset>
+</viz:dataset>
+
+<viz:feeds>
+<viz.feeds:FeedItem uid="size" type="Measure" values="Value"/>
+<viz.feeds:FeedItem uid="color" type="Dimension" values="Segment"/>
+</viz:feeds>
+
+</viz:VizFrame>
+
+</Grid>
+
+</VBox>
+</Page>
 </mvc:View>
