@@ -1,35 +1,22 @@
-from fastapi import APIRouter, HTTPException, Depends
-from passlib.context import CryptContext
-from pydantic import BaseModel
+# backend/controllers/auth_controller.py
+
 from sqlalchemy.orm import Session
-from backend.database import SessionLocal
+from fastapi import HTTPException
 from backend.models.user_model import User
+from backend.utils.security import verify_password, create_access_token
 
-router = APIRouter()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-class LoginRequest(BaseModel):
-    username: str
-    password: str
-
-# Dependency to get DB session
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-@router.post("/login")
-def login(user: LoginRequest, db: Session = Depends(get_db)):
-
-    db_user = db.query(User).filter(User.username == user.username).first()
-    if not db_user or not verify_password(user.password, db_user.password):
+def login_user(db: Session, username: str, password: str):
+    db_user = db.query(User).filter(User.username == username).first()
+    
+    if not db_user or not verify_password(password, db_user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    access_token = create_access_token(
+        data={"sub": db_user.username, "role": db_user.role}
+    )
+    
     return {
-        "access_token": "fake-token",
+        "access_token": access_token,
+        "token_type": "bearer",
         "role": db_user.role
     }

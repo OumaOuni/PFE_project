@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.controllers.auth_controller import router as auth_router
+from backend.routes.auth_route import router as auth_router
+from backend.routes.dashboard import router as dashboard_router
 
 app = FastAPI()
 
@@ -15,6 +16,7 @@ app.add_middleware(
 
 # Include authentication routes
 app.include_router(auth_router)
+app.include_router(dashboard_router)
 
 @app.get("/")
 def root():

@@ -54,6 +54,10 @@ sap.ui.define(
             sessionStorage.setItem("role", data.role);
 
             var oRouter = this.getOwnerComponent().getRouter();
+            if (!data.access_token) {
+              this.getRouter().navTo("Login");
+              return;
+            }
 
             switch (data.role) {
               case "ceo":
