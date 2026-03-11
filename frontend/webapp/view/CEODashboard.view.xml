@@ -1,12 +1,150 @@
 <mvc:View
     controllerName="myApp.controller.CEODashboard"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+    xmlns="sap.m"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:layout="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
 
-    <Page title="CEO Dashboard">
-        <content>
-            <Text text="CEO Dashboard Page"/>
-        </content>
-    </Page>
+<Page title="Executive Analytics Dashboard">
 
+<VBox class="sapUiLargeMargin">
+
+<!-- ================= KPI SECTION ================= -->
+
+<Title text="Key Business Metrics" level="H3"/>
+
+<layout:Grid defaultSpan="L3 M6 S12" class="sapUiMediumMarginTop">
+
+<GenericTile header="Total Revenue">
+<TileContent>
+<NumericContent 
+value="{kpiModel>/kpi/revenue}"
+scale="K"
+indicator="{= ${kpiModel>/kpi/revenue} > 100 ? 'Up' : 'Down'}"
+valueColor="{= ${kpiModel>/kpi/revenue} > 100 ? 'Good' : 'Error'}"/>
+</TileContent>
+</GenericTile>
+
+<GenericTile header="Active Users">
+<TileContent>
+<NumericContent 
+value="{kpiModel>/kpi/users}"
+indicator="{= ${kpiModel>/kpi/users} > 500 ? 'Up' : 'Down'}"
+valueColor="{= ${kpiModel>/kpi/users} > 500 ? 'Good' : 'Critical'}"/>
+</TileContent>
+</GenericTile>
+
+<GenericTile header="Conversion Rate">
+<TileContent>
+<NumericContent 
+value="{kpiModel>/kpi/conversion}"
+scale="%"
+indicator="{= ${kpiModel>/kpi/conversion} > 6 ? 'Up' : 'Down'}"
+valueColor="{= ${kpiModel>/kpi/conversion} > 6 ? 'Good' : 'Critical'}"/>
+</TileContent>
+</GenericTile>
+
+<GenericTile header="Growth">
+<TileContent>
+<NumericContent 
+value="{kpiModel>/kpi/growth}"
+scale="%"
+indicator="{= ${kpiModel>/kpi/growth} > 2 ? 'Up' : 'Down'}"
+valueColor="{= ${kpiModel>/kpi/growth} > 2 ? 'Good' : 'Critical'}"/>
+</TileContent>
+</GenericTile>
+
+</layout:Grid>
+
+<!-- ================= ANALYTICS SECTION ================= -->
+
+<Title text="Business Analytics" level="H3" class="sapUiMediumMarginTop"/>
+
+<layout:Grid defaultSpan="L6 M12 S12" class="sapUiMediumMarginTop">
+
+<!-- Revenue Chart -->
+<Panel  class="sapUiResponsiveMargin">
+
+<viz:VizFrame vizType="column" height="350px" width="100%"  >
+
+<viz:dataset>
+<viz.data:FlattenedDataset data="{kpiModel>/sales}">
+<viz.data:dimensions>
+<viz.data:DimensionDefinition name="Month" value="{month}"/>
+</viz.data:dimensions>
+<viz.data:measures>
+<viz.data:MeasureDefinition name="Revenue" value="{revenue}"/>
+</viz.data:measures>
+</viz.data:FlattenedDataset>
+</viz:dataset>
+
+<viz:feeds>
+<viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Revenue"/>
+<viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Month"/>
+</viz:feeds>
+
+</viz:VizFrame>
+
+</Panel>
+
+<!-- Users Growth -->
+<Panel headerText="User Growth" class="sapUiResponsiveMargin">
+
+<viz:VizFrame vizType="line" height="350px" width="100%">
+
+<viz:dataset>
+<viz.data:FlattenedDataset data="{kpiModel>/trend}">
+<viz.data:dimensions>
+<viz.data:DimensionDefinition name="Date" value="{date}"/>
+</viz.data:dimensions>
+<viz.data:measures>
+<viz.data:MeasureDefinition name="Users" value="{users}"/>
+</viz.data:measures>
+</viz.data:FlattenedDataset>
+</viz:dataset>
+
+<viz:feeds>
+<viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Users"/>
+<viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Date"/>
+</viz:feeds>
+
+</viz:VizFrame>
+
+</Panel>
+
+<!-- Market Share -->
+<Panel headerText="Market Distribution" class="sapUiResponsiveMargin">
+
+<viz:VizFrame vizType="pie" height="350px" width="100%">
+
+<viz:dataset>
+<viz.data:FlattenedDataset data="{kpiModel>/distribution}">
+<viz.data:dimensions>
+<viz.data:DimensionDefinition name="Segment" value="{segment}"/>
+</viz.data:dimensions>
+<viz.data:measures>
+<viz.data:MeasureDefinition name="Value" value="{value}"/>
+</viz.data:measures>
+</viz.data:FlattenedDataset>
+</viz:dataset>
+
+<viz:feeds>
+<viz.feeds:FeedItem uid="size" type="Measure" values="Value"/>
+<viz.feeds:FeedItem uid="color" type="Dimension" values="Segment"/>
+</viz:feeds>
+
+</viz:VizFrame>
+
+</Panel>
+
+</layout:Grid>
+
+
+</VBox>
+
+</Page>
 </mvc:View>

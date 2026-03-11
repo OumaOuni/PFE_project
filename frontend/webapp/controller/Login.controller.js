@@ -54,10 +54,6 @@ sap.ui.define(
             sessionStorage.setItem("role", data.role);
 
             var oRouter = this.getOwnerComponent().getRouter();
-            if (!data.access_token) {
-              this.getRouter().navTo("Login");
-              return;
-            }
 
             switch (data.role) {
               case "ceo":
@@ -68,6 +64,9 @@ sap.ui.define(
                 break;
               case "inventory_manager":
                 oRouter.navTo("InventoryDashboard");
+                break;
+              case "admin":
+                oRouter.navTo("ADMINDashboard");
                 break;
               default:
                 MessageBox.error("Unknown role");

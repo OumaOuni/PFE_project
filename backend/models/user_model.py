@@ -6,6 +6,7 @@ class User(Base):
     __table_args__ = {"schema": "openrational"}
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
+    username = Column(String, unique=False, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
     role = Column(String)

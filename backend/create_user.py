@@ -6,6 +6,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # List of users you want to create
 users_to_create = [
+    {"username": "oumaima", "password": "1234", "role": "admin"},
     {"username": "oussama", "password": "1234", "role": "ceo"},
     {"username": "rym", "password": "1234", "role": "sales_manager"},
     {"username": "henda", "password": "1234", "role": "inventory_manager"},
