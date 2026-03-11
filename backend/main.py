@@ -8,7 +8,7 @@ app = FastAPI()
 # Allow frontend (UI5) to call backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For development only
+    allow_origins=["http://localhost:8080"],  # your UI5 dev server
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

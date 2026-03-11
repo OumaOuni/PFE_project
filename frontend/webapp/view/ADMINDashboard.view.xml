@@ -1,0 +1,142 @@
+<mvc:View
+    controllerName="myApp.controller.ADMINDashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+
+    <Page title="Admin Dashboard">
+
+        <!-- ================= USER MANAGEMENT ================= -->
+        
+        <Panel headerText="User Management" class="sapUiMediumMarginTop">
+
+            <Table
+                id="usersTable"
+                items="{userModel>/users}"
+                mode="SingleSelectLeft"
+                selectionChange="onUserSelectionChange">
+
+                <!-- Table Toolbar -->
+                <headerToolbar>
+                    <Toolbar>
+                        <Title text="System Users"/>
+                        <ToolbarSpacer/>
+                        <SearchField
+                            id="userSearch"
+                            placeholder="Search users..."
+                            width="250px"
+                            class="sapUiTinyMarginBegin"
+                            liveChange="onSearchUsers"/>
+                        <ToolbarSpacer/>
+                        <Button text="Add User" press="onOpenAddUserDialog"/>
+                        <Button text="Edit Selected User" press="onEditSelectedUser"/>
+<Button text="Delete Selected User" type="Reject" press="onDeleteSelectedUser"/>
+                    </Toolbar>
+                </headerToolbar>
+
+                <!-- Columns -->
+                <columns>
+                    <Column><Text text="ID"/></Column>
+                    <Column><Text text="Username"/></Column>
+                    <Column><Text text="Email"/></Column>
+                    <Column><Text text="Role"/></Column>
+                    <Column><Text text="Actions"/></Column>
+                </columns>
+
+                <!-- Table Items -->
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{userModel>id}"/>
+                            <Text text="{userModel>username}"/>
+                            <Text text="{userModel>email}"/>
+                            <Text text="{userModel>role}"/>
+                            <HBox>
+                                <Button icon="sap-icon://edit" press="onOpenEditUserDialog"/>
+                                <Button icon="sap-icon://delete" type="Reject" press="onDeleteUser"/>
+                            </HBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+
+            </Table>
+
+        </Panel>
+
+        <!-- ================= ADD USER DIALOG ================= -->
+        <Dialog id="addUserDialog" title="Add User">
+            <VBox class="sapUiSmallMargin">
+                <Input id="usernameInput" placeholder="Username" required="true" liveChange="onValidateInputs"/>
+                <Input id="emailInput" placeholder="Email" autocomplete="false" required="true" liveChange="onValidateInputs"/>
+                <Input id="passwordInput" type="Password" placeholder="Password" required="true" liveChange="onValidateInputs"/>
+                <Select id="roleInput" change="onValidateInputs">
+                    <items>
+                        <core:Item key="ceo" text="CEO"/>
+                        <core:Item key="sales_manager" text="Sales Manager"/>
+                        <core:Item key="inventory_manager" text="Inventory Manager"/>
+                        <core:Item key="admin" text="Admin"/>
+                    </items>
+                </Select>
+            </VBox>
+
+            <beginButton>
+                <Button text="Add" id="addUserBtn" type="Emphasized" press="onAddUser" enabled="false"/>
+            </beginButton>
+
+            <endButton>
+                <Button text="Cancel" press="onCancelAddUser"/>
+            </endButton>
+        </Dialog>
+        <!-- ================= EDIT USER DIALOG ================= -->
+<Dialog id="editUserDialog" title="Edit User">
+
+    <VBox class="sapUiSmallMargin">
+
+        <Input
+            value="{userModel>username}"
+            placeholder="Username"
+            required="true"/>
+
+        <Input
+            value="{userModel>email}"
+            placeholder="Email"
+            required="true"/>
+
+        <Input
+            id="editPasswordInput"
+            type="Password"
+            placeholder="Leave blank to keep password"/>
+
+        <Select
+            selectedKey="{userModel>role}">
+
+            <items>
+                <core:Item key="ceo" text="CEO"/>
+                <core:Item key="sales_manager" text="Sales Manager"/>
+                <core:Item key="inventory_manager" text="Inventory Manager"/>
+                <core:Item key="admin" text="Admin"/>
+            </items>
+
+        </Select>
+
+    </VBox>
+
+    <beginButton>
+        <Button
+            text="Update"
+            type="Emphasized"
+            press="onConfirmEditUser"/>
+    </beginButton>
+
+    <endButton>
+        <Button
+            text="Cancel"
+            press="onCancelEditUser"/>
+    </endButton>
+
+</Dialog>
+
+    </Page>
+
+</mvc:View>

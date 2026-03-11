@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from backend.models.user_model import User
 from backend.utils.security import verify_password, create_access_token
 
+
 def login_user(db: Session, username: str, password: str):
     db_user = db.query(User).filter(User.username == username).first()
     
