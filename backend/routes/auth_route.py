@@ -5,9 +5,8 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from backend.database import SessionLocal
 from backend.controllers.auth_controller import login_user
-from backend.controllers.auth_controller import login_user
 from backend.schemas.user_schema import LoginRequest
-from backend.dependencies.db_dependencies import get_db
+from backend.dependencies.auth_dependencies import get_db
 
 router = APIRouter(tags=["Auth"])
 
