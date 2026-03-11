@@ -1,11 +1,136 @@
 <mvc:View
     controllerName="myApp.controller.SalesDashboard"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+    xmlns="sap.m"
+    xmlns:layout="sap.ui.layout"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    displayBlock="true">
 
-    <Page title="Sales Manager Dashboard">
+    <Page title="Sales Manager Dashboard — Luxury Home Decor BI">
+        <headerContent>
+            <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
+        </headerContent>
         <content>
-            <Text text="Sales Manager Dashboard Page"/>
+
+            <!-- ═══════════════ KPI CARD ═══════════════ -->
+            <HBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop">
+                <GenericTile header="Average Order Value" subheader="All sales">
+                    <tileContent>
+                        <TileContent unit="€">
+                            <content>
+                                <NumericContent value="{salesModel>/avg_order_value}" withMargin="false"/>
+                            </content>
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+            </HBox>
+
+            <!-- ═══════════════ CHARTS ROW ═══════════════ -->
+            <layout:Grid defaultSpan="L6 M12 S12" class="sapUiSmallMarginBegin sapUiSmallMarginEnd">
+                <layout:content>
+
+                    <!-- Monthly Sales vs Target Column Chart -->
+                    <Panel headerText="Monthly Sales vs Target (2025)">
+                        <viz:VizFrame
+                            id="salesTargetChart"
+                            uiConfig="{applicationSet:'fiori'}"
+                            vizType="column"
+                            width="100%"
+                            height="280px">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{salesModel>/monthly_vs_target}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Month" value="{month}"/>
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Actual (€)" value="{actual}"/>
+                                        <viz.data:MeasureDefinition name="Target (€)" value="{target}"/>
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <viz.feeds:FeedItem id="salesTargetValue" uid="valueAxis" type="Measure" values="Actual (€);Target (€)"/>
+                                <viz.feeds:FeedItem id="salesTargetCat" uid="categoryAxis" type="Dimension" values="Month"/>
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </Panel>
+
+                    <!-- Sales by Category Donut Chart -->
+                    <Panel headerText="Sales by Category">
+                        <viz:VizFrame
+                            id="salesCategoryChart"
+                            uiConfig="{applicationSet:'fiori'}"
+                            vizType="donut"
+                            width="100%"
+                            height="280px">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{salesModel>/sales_by_category}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Category" value="{name}"/>
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Revenue (€)" value="{revenue}"/>
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <viz.feeds:FeedItem id="salesCatSize" uid="size" type="Measure" values="Revenue (€)"/>
+                                <viz.feeds:FeedItem id="salesCatColor" uid="color" type="Dimension" values="Category"/>
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </Panel>
+
+                    <!-- Sales Leaderboard Table -->
+                    <Panel headerText="Sales Leaderboard">
+                        <Table items="{salesModel>/leaderboard}" noDataText="No data">
+                            <columns>
+                                <Column><Text text="Name"/></Column>
+                                <Column><Text text="Region"/></Column>
+                                <Column><Text text="Total Sales (€)"/></Column>
+                                <Column><Text text="Orders"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{salesModel>name}"/>
+                                        <Text text="{salesModel>region}"/>
+                                        <ObjectNumber number="{salesModel>total_sales}" unit="€"/>
+                                        <Text text="{salesModel>orders}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+
+                    <!-- Top Customers Table -->
+                    <Panel headerText="Top Customers">
+                        <Table items="{salesModel>/top_customers}" noDataText="No data">
+                            <columns>
+                                <Column><Text text="Customer"/></Column>
+                                <Column><Text text="Country"/></Column>
+                                <Column><Text text="Type"/></Column>
+                                <Column><Text text="Total Spent (€)"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{salesModel>name}"/>
+                                        <Text text="{salesModel>country}"/>
+                                        <ObjectStatus
+                                            text="{salesModel>type}"
+                                            state="{= ${salesModel>type} === 'VIP' ? 'Success' : ${salesModel>type} === 'New' ? 'Warning' : 'None'}"/>
+                                        <ObjectNumber number="{salesModel>total_spent}" unit="€"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+
+                </layout:content>
+            </layout:Grid>
+
         </content>
     </Page>
 

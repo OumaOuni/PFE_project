@@ -34,6 +34,7 @@ sap.ui.define(
           CEODashboard: "ceo",
           SalesDashboard: "sales_manager",
           InventoryDashboard: "inventory_manager",
+          ADMINDashboard: "admin",
         };
 
         if (roleMap[sRouteName] && roleMap[sRouteName] !== sRole) {

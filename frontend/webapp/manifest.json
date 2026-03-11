@@ -59,13 +59,19 @@
           "pattern": "inventory",
           "name": "InventoryDashboard",
           "target": "InventoryDashboard"
+        },
+        {
+          "pattern": "admin",
+          "name": "ADMINDashboard",
+          "target": "ADMINDashboard"
         }
       ],
       "targets": {
-        "Login": { "viewName": "Login" },
-        "CEODashboard": { "viewName": "CEODashboard" },
-        "SalesDashboard": { "viewName": "SalesDashboard" },
-        "InventoryDashboard": { "viewName": "InventoryDashboard" }
+        "Login":              { "viewName": "Login" },
+        "CEODashboard":       { "viewName": "CEODashboard" },
+        "SalesDashboard":     { "viewName": "SalesDashboard" },
+        "InventoryDashboard": { "viewName": "InventoryDashboard" },
+        "ADMINDashboard":     { "viewName": "ADMINDashboard" }
       }
     }
   }
