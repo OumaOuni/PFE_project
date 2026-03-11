@@ -1,11 +1,165 @@
 <mvc:View
     controllerName="myApp.controller.CEODashboard"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+    xmlns="sap.m"
+    xmlns:layout="sap.ui.layout"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    displayBlock="true">
 
-    <Page title="CEO Dashboard">
+    <Page title="CEO Dashboard — Luxury Home Decor BI">
+        <headerContent>
+            <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
+        </headerContent>
         <content>
-            <Text text="CEO Dashboard Page"/>
+
+            <!-- ═══════════════ KPI CARDS ═══════════════ -->
+            <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop">
+                <GenericTile header="Monthly Revenue" subheader="Current Month" class="sapUiTinyMarginEnd sapUiTinyMarginBottom">
+                    <tileContent>
+                        <TileContent unit="€">
+                            <content>
+                                <NumericContent value="{ceoModel>/kpis/monthly_revenue}" withMargin="false" scale="K"/>
+                            </content>
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+                <GenericTile header="Profit Margin" subheader="Overall" class="sapUiTinyMarginEnd sapUiTinyMarginBottom">
+                    <tileContent>
+                        <TileContent unit="%">
+                            <content>
+                                <NumericContent value="{ceoModel>/kpis/profit_margin}" withMargin="false"/>
+                            </content>
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+                <GenericTile header="Total Customers" subheader="All time" class="sapUiTinyMarginEnd sapUiTinyMarginBottom">
+                    <tileContent>
+                        <TileContent>
+                            <content>
+                                <NumericContent value="{ceoModel>/kpis/total_customers}" withMargin="false"/>
+                            </content>
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+                <GenericTile header="Monthly Orders" subheader="Current Month" class="sapUiTinyMarginEnd sapUiTinyMarginBottom">
+                    <tileContent>
+                        <TileContent>
+                            <content>
+                                <NumericContent value="{ceoModel>/kpis/monthly_orders}" withMargin="false"/>
+                            </content>
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+            </HBox>
+
+            <!-- ═══════════════ CHARTS ROW ═══════════════ -->
+            <layout:Grid defaultSpan="L6 M12 S12" class="sapUiSmallMarginBegin sapUiSmallMarginEnd">
+                <layout:content>
+
+                    <!-- Revenue Trend Line Chart -->
+                    <Panel headerText="Revenue Trend — Last 6 Months">
+                        <viz:VizFrame
+                            id="ceoTrendChart"
+                            uiConfig="{applicationSet:'fiori'}"
+                            vizType="line"
+                            width="100%"
+                            height="280px">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{ceoModel>/monthly_trend}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Month" value="{month}"/>
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Revenue (€)" value="{revenue}"/>
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <viz.feeds:FeedItem id="ceoTrendValue" uid="valueAxis" type="Measure" values="Revenue (€)"/>
+                                <viz.feeds:FeedItem id="ceoTrendCat" uid="categoryAxis" type="Dimension" values="Month"/>
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </Panel>
+
+                    <!-- Sales by Region Donut Chart -->
+                    <Panel headerText="Sales by Region">
+                        <viz:VizFrame
+                            id="ceoRegionChart"
+                            uiConfig="{applicationSet:'fiori'}"
+                            vizType="donut"
+                            width="100%"
+                            height="280px">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{ceoModel>/sales_by_region}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Region" value="{region}"/>
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Revenue (€)" value="{revenue}"/>
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <viz.feeds:FeedItem id="ceoRegionSize" uid="size" type="Measure" values="Revenue (€)"/>
+                                <viz.feeds:FeedItem id="ceoRegionColor" uid="color" type="Dimension" values="Region"/>
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </Panel>
+
+                    <!-- Top 5 Products Bar Chart -->
+                    <Panel headerText="Top 5 Products by Revenue">
+                        <viz:VizFrame
+                            id="ceoProductChart"
+                            uiConfig="{applicationSet:'fiori'}"
+                            vizType="bar"
+                            width="100%"
+                            height="280px">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{ceoModel>/top_products}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Product" value="{name}"/>
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Revenue (€)" value="{revenue}"/>
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <viz.feeds:FeedItem id="ceoProductValue" uid="valueAxis" type="Measure" values="Revenue (€)"/>
+                                <viz.feeds:FeedItem id="ceoProductCat" uid="categoryAxis" type="Dimension" values="Product"/>
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </Panel>
+
+                    <!-- Low Stock Alerts Table -->
+                    <Panel headerText="Low Stock Alerts">
+                        <Table items="{ceoModel>/low_stock}" noDataText="No low stock items">
+                            <columns>
+                                <Column><Text text="Product"/></Column>
+                                <Column><Text text="Collection"/></Column>
+                                <Column><Text text="Category"/></Column>
+                                <Column><Text text="Qty"/></Column>
+                                <Column><Text text="Min Stock"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{ceoModel>name}"/>
+                                        <Text text="{ceoModel>collection}"/>
+                                        <Text text="{ceoModel>category}"/>
+                                        <ObjectStatus text="{ceoModel>quantity}" state="Error"/>
+                                        <Text text="{ceoModel>min_stock}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+
+                </layout:content>
+            </layout:Grid>
+
         </content>
     </Page>
 

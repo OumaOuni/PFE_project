@@ -1,11 +1,167 @@
 <mvc:View
     controllerName="myApp.controller.InventoryDashboard"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+    xmlns="sap.m"
+    xmlns:layout="sap.ui.layout"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    displayBlock="true">
 
-    <Page title="Inventory Manager Dashboard">
+    <Page title="Inventory Manager Dashboard — Luxury Home Decor BI">
+        <headerContent>
+            <Button text="Logout" icon="sap-icon://log" type="Reject" press="onLogout"/>
+        </headerContent>
         <content>
-            <Text text="Inventory Manager Dashboard Page"/>
+
+            <!-- ═══════════════ KPI CARDS ═══════════════ -->
+            <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop">
+                <GenericTile header="Total Products" subheader="In catalog" class="sapUiTinyMarginEnd sapUiTinyMarginBottom">
+                    <tileContent>
+                        <TileContent>
+                            <content>
+                                <NumericContent value="{invModel>/summary/total_products}" withMargin="false"/>
+                            </content>
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+                <GenericTile header="Total Units" subheader="In stock" class="sapUiTinyMarginEnd sapUiTinyMarginBottom">
+                    <tileContent>
+                        <TileContent>
+                            <content>
+                                <NumericContent value="{invModel>/summary/total_units}" withMargin="false"/>
+                            </content>
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+                <GenericTile header="Stock Value" subheader="Total cost value" class="sapUiTinyMarginEnd sapUiTinyMarginBottom">
+                    <tileContent>
+                        <TileContent unit="€">
+                            <content>
+                                <NumericContent value="{invModel>/summary/total_stock_value}" withMargin="false" scale="K"/>
+                            </content>
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+                <GenericTile header="Critical Alerts" subheader="Below min stock" class="sapUiTinyMarginEnd sapUiTinyMarginBottom">
+                    <tileContent>
+                        <TileContent>
+                            <content>
+                                <NumericContent value="{invModel>/summary/critical_count}" withMargin="false" valueColor="Critical"/>
+                            </content>
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+            </HBox>
+
+            <!-- ═══════════════ CHARTS ROW ═══════════════ -->
+            <layout:Grid defaultSpan="L6 M12 S12" class="sapUiSmallMarginBegin sapUiSmallMarginEnd">
+                <layout:content>
+
+                    <!-- Stock by Category Donut Chart -->
+                    <Panel headerText="Stock by Category">
+                        <viz:VizFrame
+                            id="invCategoryChart"
+                            uiConfig="{applicationSet:'fiori'}"
+                            vizType="donut"
+                            width="100%"
+                            height="280px">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{invModel>/stock_by_category}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Category" value="{category}"/>
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Units" value="{units}"/>
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <viz.feeds:FeedItem id="invCatSize" uid="size" type="Measure" values="Units"/>
+                                <viz.feeds:FeedItem id="invCatColor" uid="color" type="Dimension" values="Category"/>
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </Panel>
+
+                    <!-- Stock Movements Column Chart -->
+                    <Panel headerText="Stock Movements — Last 6 Months">
+                        <viz:VizFrame
+                            id="invMovementsChart"
+                            uiConfig="{applicationSet:'fiori'}"
+                            vizType="column"
+                            width="100%"
+                            height="280px">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{invModel>/movements}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Month" value="{month}"/>
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Stock In" value="{stock_in}"/>
+                                        <viz.data:MeasureDefinition name="Stock Out" value="{stock_out}"/>
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <viz.feeds:FeedItem id="invMovValue" uid="valueAxis" type="Measure" values="Stock In;Stock Out"/>
+                                <viz.feeds:FeedItem id="invMovCat" uid="categoryAxis" type="Dimension" values="Month"/>
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </Panel>
+
+                    <!-- Critical Stock Table -->
+                    <Panel headerText="Critical Stock Alerts">
+                        <Table items="{invModel>/critical_stock}" noDataText="No critical stock items">
+                            <columns>
+                                <Column><Text text="Product"/></Column>
+                                <Column><Text text="Collection"/></Column>
+                                <Column><Text text="Category"/></Column>
+                                <Column><Text text="Qty"/></Column>
+                                <Column><Text text="Min Stock"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{invModel>name}"/>
+                                        <Text text="{invModel>collection}"/>
+                                        <Text text="{invModel>category}"/>
+                                        <ObjectStatus text="{invModel>quantity}" state="Error"/>
+                                        <Text text="{invModel>min_stock}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+
+                    <!-- Full Inventory Table -->
+                    <Panel headerText="Full Inventory">
+                        <Table items="{invModel>/all_products}" noDataText="No products">
+                            <columns>
+                                <Column><Text text="Product"/></Column>
+                                <Column><Text text="Category"/></Column>
+                                <Column><Text text="Collection"/></Column>
+                                <Column><Text text="Qty"/></Column>
+                                <Column><Text text="Status"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{invModel>name}"/>
+                                        <Text text="{invModel>category}"/>
+                                        <Text text="{invModel>collection}"/>
+                                        <Text text="{invModel>quantity}"/>
+                                        <ObjectStatus
+                                            text="{invModel>status}"
+                                            state="{= ${invModel>status} === 'Critical' ? 'Error' : ${invModel>status} === 'Low' ? 'Warning' : 'Success'}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+
+                </layout:content>
+            </layout:Grid>
+
         </content>
     </Page>
 

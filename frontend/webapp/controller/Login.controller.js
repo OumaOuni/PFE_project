@@ -69,6 +69,9 @@ sap.ui.define(
               case "inventory_manager":
                 oRouter.navTo("InventoryDashboard");
                 break;
+              case "admin":
+                oRouter.navTo("ADMINDashboard");
+                break;
               default:
                 MessageBox.error("Unknown role");
             }
