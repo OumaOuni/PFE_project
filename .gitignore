@@ -7,7 +7,7 @@ venv/
 # Python cache
 __pycache__/
 *.pyc
-
+*.pyo
 # VS Code
 .vscode/
 
@@ -15,3 +15,10 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+node_modules/
+frontend/webapp/sapui5/
+
+# Python eggs
+*.egg-info/
+dist/
+build/
