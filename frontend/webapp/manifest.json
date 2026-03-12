@@ -24,10 +24,10 @@
     "dependencies": {
       "minUI5Version": "1.100.0",
       "libs": {
-        "sap.m": {}
-      },
-      "sap.viz": {},
-      "sap.ui.layout": {}
+        "sap.m": {},
+        "sap.viz": {},
+        "sap.ui.layout": {}
+      }
     },
     "models": {},
     "routing": {
