@@ -14,7 +14,7 @@
             <Table
                 id="usersTable"
                 items="{userModel>/users}"
-                mode="SingleSelectLeft"
+                mode="MultiSelect"
                 selectionChange="onUserSelectionChange">
 
                 <!-- Table Toolbar -->
@@ -30,7 +30,7 @@
                             liveChange="onSearchUsers"/>
                         <ToolbarSpacer/>
                         <Button text="Add User" press="onOpenAddUserDialog"/>
-                        <Button text="Edit Selected User" press="onEditSelectedUser"/>
+                        
 <Button text="Delete Selected User" type="Reject" press="onDeleteSelectedUser"/>
                     </Toolbar>
                 </headerToolbar>
@@ -94,11 +94,13 @@
     <VBox class="sapUiSmallMargin">
 
         <Input
+            id="editUsernameInput"
             value="{userModel>username}"
             placeholder="Username"
             required="true"/>
 
         <Input
+            id="editEmailInput"
             value="{userModel>email}"
             placeholder="Email"
             required="true"/>
@@ -109,6 +111,7 @@
             placeholder="Leave blank to keep password"/>
 
         <Select
+            id="editRoleSelect"
             selectedKey="{userModel>role}">
 
             <items>
