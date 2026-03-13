@@ -1,12 +1,81 @@
 <mvc:View
     controllerName="myApp.controller.SalesDashboard"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+    xmlns="sap.m"
+    xmlns:layout="sap.ui.layout"
+    displayBlock="true">
 
     <Page title="Sales Manager Dashboard">
-        <content>
-            <Text text="Sales Manager Dashboard Page"/>
-        </content>
+        <VBox class="sapUiLargeMargin">
+
+            <!-- KPI Tiles -->
+            <Title text="Sales Overview" level="H3"/>
+            <layout:Grid defaultSpan="L3 M6 S12" class="sapUiMediumMarginTop">
+                <GenericTile header="Total Revenue ($)">
+                    <TileContent>
+                        <NumericContent value="{salesModel>/summary/total_revenue}"
+                            indicator="Up" valueColor="Good"/>
+                    </TileContent>
+                </GenericTile>
+                <GenericTile header="Total Orders">
+                    <TileContent>
+                        <NumericContent value="{salesModel>/summary/total_orders}"
+                            indicator="Up" valueColor="Good"/>
+                    </TileContent>
+                </GenericTile>
+                <GenericTile header="Avg Order Value ($)">
+                    <TileContent>
+                        <NumericContent value="{salesModel>/summary/avg_order_value}"
+                            valueColor="Neutral"/>
+                    </TileContent>
+                </GenericTile>
+                <GenericTile header="Pending Orders">
+                    <TileContent>
+                        <NumericContent value="{salesModel>/summary/pending_orders}"
+                            valueColor="{= ${salesModel>/summary/pending_orders} > 10 ? 'Critical' : 'Good'}"/>
+                    </TileContent>
+                </GenericTile>
+            </layout:Grid>
+
+            <!-- Top Products Table -->
+            <Title text="Top Products" level="H3" class="sapUiMediumMarginTop"/>
+            <Table items="{salesModel>/top_products}" class="sapUiMediumMarginTop">
+                <columns>
+                    <Column><Text text="Product"/></Column>
+                    <Column><Text text="Revenue ($)"/></Column>
+                    <Column><Text text="Orders"/></Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{salesModel>name}"/>
+                            <Text text="{salesModel>revenue}"/>
+                            <Text text="{salesModel>orders}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+            <!-- Monthly Sales Table -->
+            <Title text="Monthly Sales" level="H3" class="sapUiMediumMarginTop"/>
+            <Table items="{salesModel>/monthly}" class="sapUiMediumMarginTop">
+                <columns>
+                    <Column><Text text="Month"/></Column>
+                    <Column><Text text="Revenue ($)"/></Column>
+                    <Column><Text text="Orders"/></Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{salesModel>month}"/>
+                            <Text text="{salesModel>revenue}"/>
+                            <Text text="{salesModel>orders}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+        </VBox>
     </Page>
 
 </mvc:View>

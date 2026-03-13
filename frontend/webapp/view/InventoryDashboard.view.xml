@@ -1,12 +1,82 @@
 <mvc:View
     controllerName="myApp.controller.InventoryDashboard"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+    xmlns="sap.m"
+    xmlns:layout="sap.ui.layout"
+    displayBlock="true">
 
     <Page title="Inventory Manager Dashboard">
-        <content>
-            <Text text="Inventory Manager Dashboard Page"/>
-        </content>
+        <VBox class="sapUiLargeMargin">
+
+            <!-- KPI Tiles -->
+            <Title text="Inventory Overview" level="H3"/>
+            <layout:Grid defaultSpan="L3 M6 S12" class="sapUiMediumMarginTop">
+                <GenericTile header="Total Products">
+                    <TileContent>
+                        <NumericContent value="{inventoryModel>/summary/total_products}"
+                            valueColor="Neutral"/>
+                    </TileContent>
+                </GenericTile>
+                <GenericTile header="Low Stock">
+                    <TileContent>
+                        <NumericContent value="{inventoryModel>/summary/low_stock}"
+                            valueColor="{= ${inventoryModel>/summary/low_stock} > 0 ? 'Critical' : 'Good'}"/>
+                    </TileContent>
+                </GenericTile>
+                <GenericTile header="Out of Stock">
+                    <TileContent>
+                        <NumericContent value="{inventoryModel>/summary/out_of_stock}"
+                            valueColor="{= ${inventoryModel>/summary/out_of_stock} > 0 ? 'Error' : 'Good'}"/>
+                    </TileContent>
+                </GenericTile>
+                <GenericTile header="Stock Value ($)">
+                    <TileContent>
+                        <NumericContent value="{inventoryModel>/summary/total_stock_value}"
+                            valueColor="Good"/>
+                    </TileContent>
+                </GenericTile>
+            </layout:Grid>
+
+            <!-- Products Table -->
+            <Title text="Products" level="H3" class="sapUiMediumMarginTop"/>
+            <Table
+                id="productsTable"
+                items="{inventoryModel>/products}"
+                class="sapUiMediumMarginTop">
+                <headerToolbar>
+                    <Toolbar>
+                        <Title text="Product Inventory"/>
+                        <ToolbarSpacer/>
+                        <SearchField
+                            placeholder="Search..."
+                            width="220px"
+                            liveChange="onSearchProducts"/>
+                    </Toolbar>
+                </headerToolbar>
+                <columns>
+                    <Column><Text text="ID"/></Column>
+                    <Column><Text text="Name"/></Column>
+                    <Column><Text text="Category"/></Column>
+                    <Column><Text text="Cost Price ($)"/></Column>
+                    <Column><Text text="Selling Price ($)"/></Column>
+                    <Column><Text text="Stock"/></Column>
+                </columns>
+                <items>
+                    <ColumnListItem
+                        highlight="{= ${inventoryModel>stock_quantity} === 0 ? 'Error' : ${inventoryModel>stock_quantity} &lt;= 10 ? 'Warning' : 'None'}">
+                        <cells>
+                            <Text text="{inventoryModel>product_id}"/>
+                            <Text text="{inventoryModel>product_name}"/>
+                            <Text text="{inventoryModel>category_name}"/>
+                            <Text text="{inventoryModel>cost_price}"/>
+                            <Text text="{inventoryModel>selling_price}"/>
+                            <Text text="{inventoryModel>stock_quantity}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+        </VBox>
     </Page>
 
 </mvc:View>
